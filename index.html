@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Своя игра</title>
+	<style>
+		body{
+		background-color: #ddcfff;
+		}
+			/* Стили для таблицы */
+		table {
+			border-collapse: collapse;
+			margin: 20px auto;
+		}
+		th, td {
+			border: 1px solid black;
+			padding: 10px;
+			text-align: center;
+		}
+		th {
+			background-color: #8e1ed4;
+			color: white
+		}
+		.cost{
+			background-color: #ddcfff;
+			border: none;
+		}
+		button[disabled] {
+			background-color: #8e1ed4;
+			color: white;
+			cursor: not-allowed;
+		}
+			/* Стили формы */
+		#question-form, #rules  {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background-color: white;
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+			z-index: 9999;
+		}
+		#question-form h2 {
+			margin-top: ;
+		}
+		#question-form p {
+			margin-bottom: 20px;
+		}
+		#question-form button, #rules button  {
+			width:100%;
+			display: block;
+			margin-top: 20px;
+			padding: 10px;
+			background-color: #8e1ed4;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		#rules {
+			width: 70%;
+		}
+		#question-form .ok-button, #rules .ok-button {
+			background-color: #8e1ed4;
+		}
+		.retry{
+			width:100%;
+			display: block;
+			margin-top: 20px;
+			padding: 10px;
+			background-color: blue;
+			color: white;
+			border: none;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		.rules-but{
+			width:auto;
+			display: block;
+			position: relative;
+			left: 50%;
+			transform: translate(-50%, 0);
+			margin-top: 20px;
+			padding: 10px;
+			background-color: blue;
+			color: white;
+			border: none;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		/* Стили для фона */
+		#overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgb(221,207,255);
+			z-index: 9998;
+			display: none;
+		}
+		#game-over{
+			display: none;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			padding: 20px;
+			border: 2px solid #8e1ed4;
+			background-color: #ddcfff;
+			color: blue;
+			z-index: 9999;
+		}
+	</style>
+</head>
+<body>
+	<br><button class="rules-but" onclick="showRules()">Правила игры</button><br><br>
+	<table>
+		<tr>
+			<th>Основы информатики</button></th>
+			<td><button class="cost" onclick="showQuestion('Что такое алгоритм?','Последовательность действий, которые необходимо выполнить для решения определенной задачи.', 0, 0)" data-category="0" data-price="0">100</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое цикл в программировании?','Конструкция, которая позволяет выполнять определенный блок кода несколько раз.', 0, 1)" data-category="0" data-price="1">200</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое база данных и как она работает?','Совокупность данных, которые хранятся в определенном формате и могут быть обработаны с помощью специальных программ. Она работает путем хранения, обновления и извлечения данных.', 0, 2)" data-category="0" data-price="2">300</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое алгоритм сортировки \'быстрая сортировка\' (Quick Sort) и как он работает?','Алгоритм сортировки, который использует стратегию \'разделяй и властвуй\'. Он работает путем выбора опорного элемента, разделения массива на две части и рекурсивной сортировки каждой части.', 0, 3)" data-category="0" data-price="3">400</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое принцип SOLID и как он применяется в программировании?','Принцип, который гласит, что программное обеспечение должно быть гибким, расширяемым и легко поддерживаемым. Он применяется путем разделения функциональности на отдельные классы и методы, использования интерфейсов и инъекции зависимостей.', 0, 4)" data-category="0" data-price="4">500</button></td>
+		</tr>
+		<tr>
+			<th>Информационная безопасность</button></th>
+			<td><button class="cost" onclick="showQuestion('Что такое вирус?','Вирус - это вредоносная программа, которая может копировать себя и распространяться на другие компьютеры.', 1, 0)" data-category="1" data-price="0">100</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое двухфакторная аутентификация?','Метод аутентификации, который требует двух разных способов подтверждения личности пользователя', 1, 1)" data-category="1" data-price="1">200</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое уязвимость и как ее можно обнаружить?','Уязвимость - это слабое место в системе безопасности, которое может быть использовано злоумышленниками для получения несанкционированного доступа. Уязвимости могут быть обнаружены с помощью специальных инструментов для сканирования уязвимостей.', 1, 2)" data-category="1" data-price="2">300</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое атака \'человек посередине\' (Man-in-the-middle) и как ее предотвратить?','Атака, при которой злоумышленник перехватывает коммуникацию между двумя устройствами и может изменять передаваемые данные. Для предотвращения этой атаки можно использовать шифрование данных и проверку подлинности сертификатов.', 1, 3)" data-category="1" data-price="3">400</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое атака \'нулевого дня\' (Zero-day) и как ее предотвратить?','Атака, которая использует уязвимость, которая еще не была обнаружена и исправлена. Для предотвращения этой атаки необходимо регулярно обновлять программное обеспечение и использовать специальные инструменты для обнаружения уязвимостей.', 1, 4)" data-category="1" data-price="4">500</button></td>
+		</tr>
+		<tr>
+			<th>Разработка ПО</button></th>
+			<td><button class="cost" onclick="showQuestion('Что такое IDE?','Интегрированная среда разработки, которая объединяет в себе редактор кода, отладчик, компилятор и другие инструменты для разработки программного обеспечения.', 2, 0)" data-category="2" data-price="0">100</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое методология Agile?','Гибкая методология разработки ПО, которая основана на итеративном и инкрементальном подходе.', 2, 1)" data-category="2" data-price="1">200</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое отладка и какие инструменты для нее существуют?','Процесс поиска и исправления ошибок в программном коде. Для отладки существуют различные инструменты, такие как отладчики, логгеры, профилировщики и т.д.', 2, 2)" data-category="2" data-price="2">300</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое паттерн проектирования \'Фабрика\' (Factory) и как он работает?','Паттерн, который позволяет создавать объекты без явного указания их класса. Он работает путем создания фабричного метода, который возвращает объекты нужного типа.', 2, 3)" data-category="2" data-price="3">400</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое принцип единственной ответственности (Single Responsibility Principle) и как он применяется в разработке ПО?','Принцип, который гласит, что каждый класс должен иметь только одну ответственность. Он применяется путем разделения функциональности на отдельные классы и методы.', 2, 4)" data-category="2" data-price="4">500</button></td>
+		</tr>
+		<tr>
+			<th>Сетевые технологии</button></th>
+			<td><button class="cost" onclick="showQuestion('Что такое IP-адрес?','Уникальный идентификатор, который присваивается каждому устройству в сети для обмена данными.', 3, 0)" data-category="3" data-price="0">100</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое протокол TCP?','Протокол передачи данных, который обеспечивает надежную доставку данных в сети.', 3, 1)" data-category="3" data-price="1">200</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое маршрутизация и как она работает?','Процесс выбора оптимального пути для передачи данных в сети. Она работает путем анализа информации о сетевых устройствах и выбора наиболее эффективного маршрута для передачи данных.', 3, 2)" data-category="3" data-price="2">300</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое протокол OSPF и как он работает?','Протокол маршрутизации, который используется для определения оптимального маршрута в сети. Он работает путем обмена информацией между соседними маршрутизаторами и выбора наиболее эффективного маршрута.', 3, 3)" data-category="3" data-price="3">400</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое протокол BGP и как он работает?','Протокол маршрутизации, который используется для обмена информацией между различными автономными системами в Интернете. Он работает путем выбора наиболее эффективного маршрута на основе различных критериев, таких как пропускная способность и задержка.', 3, 4)" data-category="3" data-price="4">500</button></td>
+		</tr>
+		<tr>
+			<th>Разработка веб-приложений</button></th>
+			<td><button class="cost" onclick="showQuestion('Что такое HTML?','Язык разметки, который используется для создания веб-страниц.', 4, 0)" data-category="4" data-price="0">100</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое фреймворк React?','JavaScript-библиотека, которая используется для создания пользовательских интерфейсов.', 4, 1)" data-category="4" data-price="1">200</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое REST API и как оно работает?','Архитектурный стиль, который используется для создания веб-сервисов. Оно работает путем передачи данных между клиентом и сервером в формате JSON или XML.', 4, 2)" data-category="4" data-price="2">300</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое принцип единственной ответственности (Single Responsibility Principle) и как он применяется в разработке веб-приложений?','Принцип, который гласит, что каждый компонент должен иметь только одну ответственность. Он применяется путем разделения функциональности на отдельные компоненты и модули.', 4, 3)" data-category="4" data-price="3">400</button></td>
+			<td><button class="cost" onclick="showQuestion('Что такое принцип инверсии зависимостей (Dependency Inversion Principle) и как он применяется в разработке веб-приложений?','Принцип, который гласит, что зависимости должны быть инвертированы, чтобы модули верхнего уровня не зависели от модулей нижнего уровня. Он применяется путем использования интерфейсов и инъекции зависимостей.', 4, 4)" data-category="4" data-price="4">500</button></td>
+		</tr>
+	</table>
+	<br><br><br><br><br><br><br><br><br><br>
+	<!-- Форма с правилами -->
+	<div id="overlay"></div>
+	<div id="rules" style="display: none;">
+		<h2>Правила игры</h2>
+		<p>Количество игроков: от 2х человек</p>
+		<p>Для игры необходимы лист и ручка (или просто телефон) для подсчета баллов. </p>
+		<p>Правила «Своей Игры» достаточно просты. Перед вами есть табло из тем. В каждой категории есть несколько вопросов, которые отличаются ценой.
+		От цены зависит сложность вопроса. Чем больше стоимость — тем труднее будет задачка.</p>
+		<p>Игра начинается тогда, когда первый игрок выбирает категорию и стоимость вопроса. После прочтения ведущим вопроса, отвечает тот игрок, кто первый поднимет руку.</p>
+		<p>Если отвечающий даёт правильный ответ, то он получает такое количество баллов, какова была ценность вопроса, и получает право выбора следующего вопроса. Если игрок отвечает неверно, то он теряет столько баллов, сколько стоил вопрос.</p>
+		<p>Игра продолжается до тех пор, пока не будут разыграны все вопросы. В конце игры все баллы суммируются. Побеждает тот игрок, кто получил наибольшее количество баллов.</p>
+		<button class="ok-button" onclick="hideRulesForm()">ОК</button>
+	</div>
+	<!-- Форма с вопросом -->
+	<div id="overlay"></div>
+	<div id="question-form" style="display: none;">
+		<h2 id="category"></h2>
+		<h3 id="price"></h3>
+		<p id="question-text"></p>
+		<p id="answer-text" style="display: none;"></p>
+		<button onclick="checkAnswer()">Проверить</button>
+		<button class="ok-button" onclick="hideQuestionForm()">ОК</button>
+	</div>
+	<!-- Форма завершения -->
+	<div id="overlay"></div>
+	<div id="game-over" style="display: none;">
+		<h2>Спасибо за игру!</h2>
+		<button class="retry" onclick="location.reload()">Сыграть еще раз</button>
+	</div>
+
+	<script>
+		var numQuestions = 0;
+		
+		// Функия для отображения формы с правилами
+		function showRules(){
+			// Отображаем форму с вопросом
+			document.getElementById("rules").style.display = "block";
+			// Отображаем фон
+			document.getElementById("overlay").style.display = "block";
+		}
+
+		// Функция для отображения формы с вопросом
+		function showQuestion(question, answer, indexCategory, indexPrice) {
+			// Устанавливаем категорию вопроса
+			switch(indexCategory){
+				case 0:	document.getElementById("category").innerHTML = "Основы информатики"; break;
+				case 1:	document.getElementById("category").innerHTML = "Информационная безопасность"; break;
+				case 2:	document.getElementById("category").innerHTML = "Разработка ПО"; break;
+				case 3:	document.getElementById("category").innerHTML = "Сетевые технологии"; break;
+				case 4:	document.getElementById("category").innerHTML = "Разработка веб-приложений"; break;
+				
+			}
+			// Устанавливаем ценность вопроса
+			switch(indexPrice){
+				case 0:	document.getElementById("price").innerHTML = "Ценность: 100"; break;
+				case 1:	document.getElementById("price").innerHTML = "Ценность: 200"; break;
+				case 2:	document.getElementById("price").innerHTML = "Ценность: 300"; break;
+				case 3:	document.getElementById("price").innerHTML = "Ценность: 400"; break;
+				case 4:	document.getElementById("price").innerHTML = "Ценность: 500"; break;
+				
+			}
+			// Устанавливаем текст вопроса в соответствующий элемент на странице
+			document.getElementById("question-text").innerHTML = question;
+			// Сохраняем правильный ответ
+			correctAnswer = answer;
+			// Отображаем форму с вопросом
+			document.getElementById("question-form").style.display = "block";
+			// Отображаем фон
+			document.getElementById("overlay").style.display = "block";
+			// Скрываем кнопку "ОК"
+			document.querySelector("#question-form .ok-button").style.display = "none";
+			// Добавляем атрибут disabled к кнопке, чтобы предотвратить повторное нажатие
+			document.querySelectorAll("button[data-category='" + indexCategory + "'][data-price='" + indexPrice + "']")[0].disabled = true;
+			numQuestions++;
+		}
+
+		// Функция для проверки ответа
+		function checkAnswer() {
+			document.getElementById("answer-text").innerHTML = "Правильный ответ: " + correctAnswer;
+			// Отображаем элемент с ответом
+			document.getElementById("answer-text").style.display = "block";
+			// Скрываем кнопку "Проверить"
+			document.querySelector("#question-form button").style.display = "none";
+			// Отображаем кнопку "ОК"
+			document.querySelector("#question-form .ok-button").style.display = "block";
+		}
+
+		// Функция для скрытия формы с вопросом
+		function hideQuestionForm() {
+			// Скрываем форму с вопросом
+			document.getElementById("question-form").style.display = "none";
+			// Скрываем фон
+			document.getElementById("overlay").style.display = "none";
+			// Скрываем элемент с ответом
+			document.getElementById("answer-text").style.display = "none";
+			// Отображаем кнопку "Проверить"
+			document.querySelector("#question-form button").style.display = "block";
+			// Скрываем кнопку "ОК"
+			document.querySelector("#question-form .ok-button").style.display = "none";
+			// Проверяем, завершена ли игра
+			if (numQuestions === 2) {
+				// Отображаем фон
+				document.getElementById("overlay").style.display = "block";
+				// Если да, то отображаем окно с надписью "Спасибо за игру"
+				document.getElementById("game-over").style.display = "block";
+			}
+		}
+		
+		// Функция для скрытия формы правил
+		function hideRulesForm() {
+			// Скрываем форму с правилами
+			document.getElementById("rules").style.display = "none";
+			// Скрываем фон
+			document.getElementById("overlay").style.display = "none";
+		}
+	</script>
+</body>
+</html>
